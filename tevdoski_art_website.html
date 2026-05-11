@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tevdoski Art – Избери Боја</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:        #080818;
+    --bg2:       #0d1030;
+    --white:     #ffffff;
+    --dim:       #9999bb;
+    --red:       #E53935;
+    --orange:    #FB8C00;
+    --yellow:    #FDD835;
+    --green:     #43A047;
+    --cyan:      #00ACC1;
+    --blue:      #1E88E5;
+    --purple:    #8E24AA;
+    --accent:    #FF3CAC;
+    --accent2:   #FFCD3C;
+    --rainbow: linear-gradient(90deg, #E53935, #FB8C00, #FDD835, #43A047, #00ACC1, #1E88E5, #8E24AA);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ---- SCROLLBAR ---- */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--rainbow); border-radius: 3px; }
+
+  /* ---- NAV ---- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(8,8,24,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .nav-logo {
+    font-size: 20px; font-weight: 900; letter-spacing: 3px;
+    color: var(--white); text-decoration: none;
+  }
+  .nav-logo span { background: var(--rainbow); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    color: var(--dim); font-size: 13px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; text-decoration: none;
+    transition: color .25s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  /* ---- HERO ---- */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; padding-top: 80px;
+    text-align: center;
+  }
+
+  /* animated bg orbs */
+  .orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); opacity: .18; pointer-events: none;
+    animation: float 8s ease-in-out infinite;
+  }
+  .orb1 { width: 500px; height: 500px; background: #1E88E5; top: -100px; left: -100px; animation-delay: 0s; }
+  .orb2 { width: 400px; height: 400px; background: #8E24AA; bottom: -80px; right: -80px; animation-delay: -3s; }
+  .orb3 { width: 300px; height: 300px; background: #E53935; top: 40%; left: 60%; animation-delay: -5s; }
+  @keyframes float {
+    0%,100% { transform: translate(0,0) scale(1); }
+    50%      { transform: translate(30px,-30px) scale(1.05); }
+  }
+
+  /* brush drip SVG in hero */
+  .hero-brush {
+    width: 180px; margin-bottom: 30px;
+    animation: drip 1.2s cubic-bezier(.22,.61,.36,1) both;
+  }
+  @keyframes drip {
+    from { opacity:0; transform: translateY(-40px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .hero-tag {
+    font-size: 11px; font-weight: 700; letter-spacing: 5px;
+    color: var(--dim); text-transform: uppercase; margin-bottom: 16px;
+    animation: fadeUp .8s .3s both;
+  }
+  .hero-title {
+    font-size: clamp(48px,8vw,90px); font-weight: 900;
+    line-height: 1; letter-spacing: 4px;
+    animation: fadeUp .8s .4s both;
+  }
+  .hero-title .izberi { display: block; color: var(--white); }
+  .hero-title .boja   {
+    display: block;
+    background: var(--rainbow);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    margin-top: 20px; font-size: 15px; color: var(--dim); letter-spacing: 1px;
+    animation: fadeUp .8s .55s both;
+  }
+  .hero-cta {
+    margin-top: 38px; display: flex; gap: 16px; justify-content: center;
+    animation: fadeUp .8s .7s both;
+  }
+  .btn {
+    padding: 14px 34px; border-radius: 4px; font-family: inherit;
+    font-size: 13px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; text-decoration: none; cursor: pointer;
+    border: none; transition: transform .2s, box-shadow .2s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary {
+    background: var(--rainbow); color: #000;
+    box-shadow: 0 6px 30px rgba(229,57,53,.35);
+  }
+  .btn-outline {
+    background: transparent; color: var(--white);
+    border: 2px solid rgba(255,255,255,.25);
+  }
+  .btn-outline:hover { border-color: var(--white); }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(24px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* rainbow line */
+  .rainbow-line {
+    width: 100%; height: 3px;
+    background: var(--rainbow);
+  }
+
+  /* ---- SECTIONS ---- */
+  section { padding: 100px 48px; max-width: 1200px; margin: 0 auto; }
+
+  .section-tag {
+    font-size: 11px; font-weight: 700; letter-spacing: 5px;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: clamp(32px,4vw,52px); font-weight: 900;
+    letter-spacing: 2px; line-height: 1.1; margin-bottom: 16px;
+  }
+  .section-title span {
+    background: var(--rainbow);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .section-sub { color: var(--dim); font-size: 15px; max-width: 520px; line-height: 1.7; }
+
+  /* ---- УСЛУГИ ---- */
+  .services-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px; margin-top: 56px;
+  }
+  .service-card {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 12px; padding: 36px 30px;
+    position: relative; overflow: hidden;
+    transition: transform .25s, box-shadow .25s, border-color .25s;
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .service-card:nth-child(1)::before { background: linear-gradient(90deg, var(--red), var(--orange)); }
+  .service-card:nth-child(2)::before { background: linear-gradient(90deg, var(--yellow), var(--green)); }
+  .service-card:nth-child(3)::before { background: linear-gradient(90deg, var(--cyan), var(--blue)); }
+  .service-card:nth-child(4)::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
+  .service-card:nth-child(5)::before { background: linear-gradient(90deg, var(--purple), var(--accent)); }
+  .service-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255,255,255,.18);
+    box-shadow: 0 20px 50px rgba(0,0,0,.4);
+  }
+  .service-icon { font-size: 36px; margin-bottom: 16px; }
+  .service-name { font-size: 18px; font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; }
+  .service-desc { font-size: 13px; color: var(--dim); line-height: 1.7; margin-bottom: 20px; }
+  .service-price {
+    font-size: 22px; font-weight: 900;
+    background: var(--rainbow); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  /* ---- ГАЛЕРИЈА ---- */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: auto;
+    gap: 16px; margin-top: 56px;
+  }
+  .gallery-item {
+    border-radius: 10px; overflow: hidden;
+    aspect-ratio: 4/3;
+    position: relative;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.07);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .25s;
+    cursor: pointer;
+  }
+  .gallery-item:hover { transform: scale(1.02); }
+  .gallery-item:first-child { grid-column: span 2; aspect-ratio: 16/7; }
+  .gallery-placeholder {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    color: var(--dim); font-size: 13px; letter-spacing: 1px;
+  }
+  .gallery-placeholder .icon { font-size: 32px; opacity: .5; }
+  .gallery-upload-note {
+    margin-top: 24px; text-align: center;
+    font-size: 13px; color: var(--dim); letter-spacing: 1px;
+  }
+
+  /* ---- KONTAKT ---- */
+  .contact-wrap {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    margin-top: 56px; align-items: start;
+  }
+  .contact-info { display: flex; flex-direction: column; gap: 28px; }
+  .contact-item { display: flex; align-items: flex-start; gap: 18px; }
+  .contact-icon {
+    width: 46px; height: 46px; border-radius: 8px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .contact-label { font-size: 11px; color: var(--dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+  .contact-value { font-size: 16px; font-weight: 600; }
+  .contact-value a { color: var(--white); text-decoration: none; }
+  .contact-value a:hover { color: var(--accent); }
+
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group label { font-size: 11px; font-weight: 600; letter-spacing: 2px; color: var(--dim); text-transform: uppercase; }
+  .form-group input,
+  .form-group textarea {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 6px; padding: 14px 16px;
+    color: var(--white); font-family: inherit; font-size: 14px;
+    outline: none; resize: none;
+    transition: border-color .2s;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus { border-color: var(--accent); }
+  .form-group textarea { min-height: 120px; }
+  .btn-submit {
+    background: var(--rainbow); color: #000;
+    padding: 16px; border-radius: 6px;
+    font-family: inherit; font-size: 13px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase;
+    border: none; cursor: pointer;
+    transition: opacity .2s, transform .2s;
+  }
+  .btn-submit:hover { opacity: .9; transform: translateY(-2px); }
+
+  /* ---- FOOTER ---- */
+  footer {
+    background: rgba(0,0,0,.4);
+    border-top: 1px solid rgba(255,255,255,.06);
+    text-align: center; padding: 48px;
+  }
+  .footer-logo {
+    font-size: 28px; font-weight: 900; letter-spacing: 4px; margin-bottom: 8px;
+  }
+  .footer-logo span {
+    background: var(--rainbow); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .footer-tagline { font-size: 12px; color: var(--dim); letter-spacing: 3px; margin-bottom: 28px; }
+  .footer-rainbow { height: 3px; background: var(--rainbow); margin: 24px auto; width: 200px; border-radius: 2px; }
+  .footer-copy { font-size: 12px; color: rgba(255,255,255,.25); letter-spacing: 1px; }
+
+  /* ---- SECTION BG ALT ---- */
+  .section-alt { background: rgba(255,255,255,.02); }
+
+  /* mobile */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    section { padding: 70px 24px; }
+    .contact-wrap { grid-template-columns: 1fr; gap: 48px; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-item:first-child { grid-column: span 2; }
+    .form-row { grid-template-columns: 1fr; }
+    .hero-cta { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">TEVDOSKI <span>ART</span></a>
+  <ul class="nav-links">
+    <li><a href="#uslugi">Услуги</a></li>
+    <li><a href="#galerija">Галерија</a></li>
+    <li><a href="#kontakt">Контакт</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <!-- Brush SVG (inline) -->
+  <svg class="hero-brush" viewBox="0 0 160 260" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="s1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E53935"/><stop offset="100%" stop-color="#c62828"/></linearGradient>
+      <linearGradient id="s2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FB8C00"/><stop offset="100%" stop-color="#e65100"/></linearGradient>
+      <linearGradient id="s3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDD835"/><stop offset="100%" stop-color="#f9a825"/></linearGradient>
+      <linearGradient id="s4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#43A047"/><stop offset="100%" stop-color="#1b5e20"/></linearGradient>
+      <linearGradient id="s5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00ACC1"/><stop offset="100%" stop-color="#006064"/></linearGradient>
+      <linearGradient id="s6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1E88E5"/><stop offset="100%" stop-color="#0d47a1"/></linearGradient>
+      <linearGradient id="s7" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8E24AA"/><stop offset="100%" stop-color="#4a148c"/></linearGradient>
+    </defs>
+    <!-- Ferrule -->
+    <rect x="18" y="75" width="124" height="18" rx="4" fill="#aaa"/>
+    <!-- Bristle block -->
+    <rect x="0"   y="93" width="22" height="40" rx="3" fill="url(#s1)"/>
+    <rect x="22"  y="93" width="20" height="40" rx="3" fill="url(#s2)"/>
+    <rect x="42"  y="93" width="20" height="40" rx="3" fill="url(#s3)"/>
+    <rect x="62"  y="93" width="20" height="40" rx="3" fill="url(#s4)"/>
+    <rect x="82"  y="93" width="20" height="40" rx="3" fill="url(#s5)"/>
+    <rect x="102" y="93" width="20" height="40" rx="3" fill="url(#s6)"/>
+    <rect x="122" y="93" width="22" height="40" rx="3" fill="url(#s7)"/>
+    <!-- Drips -->
+    <rect x="0"   y="133" width="22" height="85" rx="3" fill="url(#s1)"/>
+    <ellipse cx="11"  cy="218" rx="11" ry="14" fill="#E53935"/>
+    <rect x="22"  y="133" width="20" height="65" rx="3" fill="url(#s2)"/>
+    <ellipse cx="32"  cy="198" rx="10" ry="12" fill="#FB8C00"/>
+    <rect x="42"  y="133" width="20" height="110" rx="3" fill="url(#s3)"/>
+    <ellipse cx="52"  cy="243" rx="10" ry="13" fill="#FDD835"/>
+    <rect x="62"  y="133" width="20" height="50" rx="3" fill="url(#s4)"/>
+    <ellipse cx="72"  cy="183" rx="10" ry="11" fill="#43A047"/>
+    <rect x="82"  y="133" width="20" height="78" rx="3" fill="url(#s5)"/>
+    <ellipse cx="92"  cy="211" rx="10" ry="12" fill="#00ACC1"/>
+    <rect x="102" y="133" width="20" height="45" rx="3" fill="url(#s6)"/>
+    <ellipse cx="112" cy="178" rx="10" ry="10" fill="#1E88E5"/>
+    <rect x="122" y="133" width="22" height="30" rx="3" fill="url(#s7)"/>
+    <ellipse cx="133" cy="163" rx="11" ry="10" fill="#8E24AA"/>
+    <!-- Handle -->
+    <rect x="50" y="0" width="60" height="78" rx="5" fill="#ddd"/>
+    <rect x="50" y="30" width="60" height="8" rx="2" fill="#FF3CAC" opacity=".7"/>
+  </svg>
+
+  <p class="hero-tag">Фарбање и декорација</p>
+  <h1 class="hero-title">
+    <span class="izberi">ИЗБЕРИ</span>
+    <span class="boja">БОЈА</span>
+  </h1>
+  <p class="hero-sub">Професионално фарбање на ентериер и екстериер · Скопје и околина</p>
+  <div class="hero-cta">
+    <a href="#kontakt" class="btn btn-primary">Побарај понуда</a>
+    <a href="#galerija" class="btn btn-outline">Погледни работи</a>
+  </div>
+</div>
+
+<div class="rainbow-line"></div>
+
+<!-- УСЛУГИ -->
+<section id="uslugi">
+  <p class="section-tag">Што нудиме</p>
+  <h2 class="section-title">Наши <span>Услуги</span></h2>
+  <p class="section-sub">Квалитетна работа, прецизни детали и трајни резултати за секој простор.</p>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🏠</div>
+      <div class="service-name">Ентериер фарбање</div>
+      <div class="service-desc">Фарбање на sobi, hodnici, дневни простории и цели станови со квалитетни бои.</div>
+      <div class="service-price">По договор</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🏢</div>
+      <div class="service-name">Екстериер фарбање</div>
+      <div class="service-desc">Надворешно фарбање на куќи, згради и фасади со временски отпорни бои.</div>
+      <div class="service-price">По договор</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">✨</div>
+      <div class="service-name">Декоративни техники</div>
+      <div class="service-desc">Структурни и декоративни ефекти — мермер, бетон, металик и уникатни финиши.</div>
+      <div class="service-price">По договор</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🖌️</div>
+      <div class="service-name">Гипсање и шпаклување</div>
+      <div class="service-desc">Подготовка на подлога, поправка на пукнатини и совршена рамна површина.</div>
+      <div class="service-price">По договор</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎨</div>
+      <div class="service-name">Консултации за бои</div>
+      <div class="service-desc">Бесплатен совет за избор на бои, комбинации и стилови за твојот простор.</div>
+      <div class="service-price">Бесплатно</div>
+    </div>
+  </div>
+</section>
+
+<div class="rainbow-line"></div>
+
+<!-- ГАЛЕРИЈА -->
+<section id="galerija">
+  <p class="section-tag">Наши работи</p>
+  <h2 class="section-title">Гале<span>рија</span></h2>
+  <p class="section-sub">Погледни ги нашите завршени проекти. Секој простор е уникатна приказна во боја.</p>
+
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <div class="gallery-placeholder">
+        <span class="icon">🖼️</span>
+        <span>Додај слика од работа</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-placeholder">
+        <span class="icon">🖼️</span>
+        <span>Слика 2</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-placeholder">
+        <span class="icon">🖼️</span>
+        <span>Слика 3</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-placeholder">
+        <span class="icon">🖼️</span>
+        <span>Слика 4</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-placeholder">
+        <span class="icon">🖼️</span>
+        <span>Слика 5</span>
+      </div>
+    </div>
+  </div>
+  <p class="gallery-upload-note">📸 Замени ги placeholder-ите со твои слики од работи</p>
+</section>
+
+<div class="rainbow-line"></div>
+
+<!-- КОНТАКТ -->
+<section id="kontakt">
+  <p class="section-tag">Контактирај не</p>
+  <h2 class="section-title">Побарај <span>Понуда</span></h2>
+  <p class="section-sub">Јавете се или испратете порака — одговараме брзо и доаѓаме на увид бесплатно.</p>
+
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-label">Телефон</div>
+          <div class="contact-value"><a href="tel:+38978338208">078 / 338 - 208</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Локација</div>
+          <div class="contact-value">Скопје и околина</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📱</div>
+        <div>
+          <div class="contact-label">Социјални мрежи</div>
+          <div class="contact-value"><a href="#">#TEVDOSKIART</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">⏰</div>
+        <div>
+          <div class="contact-label">Работно време</div>
+          <div class="contact-value">Пон – Саб: 08:00 – 20:00</div>
+        </div>
+      </div>
+    </div>
+
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Име</label>
+          <input type="text" placeholder="Твоето име" required/>
+        </div>
+        <div class="form-group">
+          <label>Телефон</label>
+          <input type="tel" placeholder="070 000 000"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Вид на работа</label>
+        <input type="text" placeholder="Пр. Фарбање на дневна соба"/>
+      </div>
+      <div class="form-group">
+        <label>Порака</label>
+        <textarea placeholder="Опиши го просторот, приближна superficie..."></textarea>
+      </div>
+      <button type="submit" class="btn-submit">Испрати барање →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">TEVDOSKI <span>ART</span></div>
+  <div class="footer-tagline">PAINTING &amp; DECORATION · SKOPJE</div>
+  <div class="footer-rainbow"></div>
+  <div class="footer-copy">© 2025 Tevdoski Art · Сите права задржани</div>
+</footer>
+
+<script>
+  // smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+
+  // form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.btn-submit');
+    btn.textContent = '✓ Испратено! Ќе се јавиме наскоро.';
+    btn.style.background = 'linear-gradient(90deg,#43A047,#00ACC1)';
+    setTimeout(() => {
+      btn.textContent = 'Испрати барање →';
+      btn.style.background = '';
+      e.target.reset();
+    }, 4000);
+  }
+
+  // nav active on scroll
+  const sections = document.querySelectorAll('section[id]');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY + 120;
+    sections.forEach(s => {
+      const link = document.querySelector(`.nav-links a[href="#${s.id}"]`);
+      if (!link) return;
+      link.style.color = (y >= s.offsetTop && y < s.offsetTop + s.offsetHeight) ? '#fff' : '';
+    });
+  });
+</script>
+</body>
+</html>
